@@ -1,3 +1,3 @@
-# DevOps AI Agent
+# Smart Agent
 
-AI Agent for Kubernetes / AWS / DevOps
+My first AI Agent with Ollama.

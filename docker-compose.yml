@@ -1,0 +1,70 @@
+services:
+  # 로컬 LLM
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ./data/ollama:/root/.ollama
+    restart: unless-stopped
+
+  # ChatGPT 같은 웹 UI
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    ports:
+      - "3000:8080"
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+    volumes:
+      - ./data/open-webui:/app/backend/data
+    depends_on:
+      - ollama
+    restart: unless-stopped
+
+  # Agent용 PostgreSQL
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: agent-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: agentdb
+      POSTGRES_USER: agent
+      POSTGRES_PASSWORD: agentpass
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # 캐시 / 세션
+  redis:
+    image: redis:7-alpine
+    container_name: agent-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/redis:/data
+    restart: unless-stopped
+
+  # Python 개발 컨테이너
+  dev-agent:
+    build:
+      context: .
+      dockerfile: docker/agent/Dockerfile
+    container_name: dev-agent
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+      - ~/.kube:/root/.kube:ro
+    environment:
+      - PYTHONUNBUFFERED=1
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - DATABASE_URL=postgresql://agent:agentpass@postgres:5432/agentdb
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+      - ollama
+    tty: true
+    stdin_open: true
