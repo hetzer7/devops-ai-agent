@@ -26,4 +26,4 @@ RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
 WORKDIR /workspace
 
-CMD ["bash"]
+CMD ["uvicorn", "app.api:app", "--host", "0.0.0.0", "--port", "8000"]

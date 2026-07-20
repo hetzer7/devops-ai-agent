@@ -1,6 +1,6 @@
 from ddgs import DDGS
 
-from tools.base_tool import BaseTool
+from app.tools.base_tool import BaseTool
 
 
 class SearchTool(BaseTool):

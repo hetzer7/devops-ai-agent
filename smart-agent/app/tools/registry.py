@@ -1,4 +1,4 @@
-from tools.search_tool import SearchTool
+from app.tools.search_tool import SearchTool
 
 
 class ToolRegistry:

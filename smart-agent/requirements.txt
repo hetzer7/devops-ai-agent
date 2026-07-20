@@ -1,2 +1,4 @@
 ollama
 ddgs
+fastapi
+uvicorn

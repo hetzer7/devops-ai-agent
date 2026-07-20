@@ -1,4 +1,4 @@
-from llm import LLM
+from app.llm import LLM
 
 
 class ChatBot:

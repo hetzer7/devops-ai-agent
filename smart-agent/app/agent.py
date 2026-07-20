@@ -1,6 +1,6 @@
-from chatbot import ChatBot
-from router import Router
-from tools.registry import ToolRegistry
+from app.chatbot import ChatBot
+from app.router import Router
+from app.tools.registry import ToolRegistry
 
 
 class Agent:
