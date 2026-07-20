@@ -48,29 +48,25 @@ services:
     restart: unless-stopped
 
   # Python 개발 컨테이너
-dev-agent:
-  build:
-    context: .
-    dockerfile: docker/agent/Dockerfile
-
-  container_name: dev-agent
-
-  working_dir: /workspace
-
-  volumes:
-    - .:/workspace
-    - ~/.kube:/root/.kube:ro
-
-  ports:
-    - "8000:8000"
-
-  environment:
-    - PYTHONUNBUFFERED=1
-    - OLLAMA_BASE_URL=http://ollama:11434
-    - DATABASE_URL=postgresql://agent:agentpass@postgres:5432/agentdb
-    - REDIS_URL=redis://redis:6379
-
-  depends_on:
-    - postgres
-    - redis
-    - ollama
+  dev-agent:
+    build:
+      context: .
+      dockerfile: docker/agent/Dockerfile
+    container_name: dev-agent
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+      - ~/.kube:/root/.kube:ro
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - DATABASE_URL=postgresql://agent:agentpass@postgres:5432/agentdb
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+      - ollama
+    tty: true
+    stdin_open: true
