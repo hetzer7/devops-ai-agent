@@ -3,6 +3,10 @@ from ddgs import DDGS
 
 class SearchTool:
 
+    @property
+    def name(self):
+        return "search"
+
     def execute(self, question):
 
         print("[SearchTool] 인터넷 검색")
@@ -16,4 +20,7 @@ class SearchTool:
                 )
             )
 
-        return results
+        return {
+            "type": "search",
+            "data": results
+        }

@@ -15,17 +15,25 @@ class Agent:
 
     def ask(self, question):
 
-        tool = self.router.route(question)
+        tool_name = self.router.route(question)
 
-        if tool == "search":
+        if tool_name == "chat":
 
-            search = self.registry.get("search")
+            return self.chatbot.ask(question)
 
-            results = search.execute(question)
+        tool = self.registry.get(tool_name)
+
+        if tool is None:
+
+            return "알 수 없는 Tool입니다."
+
+        result = tool.execute(question)
+
+        if result["type"] == "search":
 
             return self.chatbot.llm.ask_with_search(
                 question,
-                results
+                result["data"]
             )
 
-        return self.chatbot.ask(question)
+        return "아직 처리할 수 없는 Tool입니다."

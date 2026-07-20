@@ -3,7 +3,7 @@ from agent import Agent
 agent = Agent()
 
 print("=" * 50)
-print(" Smart Agent v0.3")
+print(" Smart Agent v1.0")
 print("=" * 50)
 print("exit 입력 시 종료됩니다.\n")
 
