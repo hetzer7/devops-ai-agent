@@ -1,7 +1,9 @@
 from ddgs import DDGS
 
+from tools.base_tool import BaseTool
 
-class SearchTool:
+
+class SearchTool(BaseTool):
 
     @property
     def name(self):
