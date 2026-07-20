@@ -8,3 +8,6 @@ psycopg[binary]
 redis
 pydantic
 httpx
+ollama
+ddgs
+fastapi
