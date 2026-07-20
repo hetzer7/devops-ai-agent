@@ -1,6 +1,6 @@
 from chatbot import ChatBot
-from planner import Planner
-from tools.search_tool import SearchTool
+from router import Router
+from tools.registry import ToolRegistry
 
 
 class Agent:
@@ -8,22 +8,24 @@ class Agent:
     def __init__(self):
 
         self.chatbot = ChatBot()
-        self.planner = Planner()
-        self.search_tool = SearchTool()
+
+        self.registry = ToolRegistry()
+
+        self.router = Router(self.registry)
 
     def ask(self, question):
 
-        if self.planner.need_search(question):
+        tool = self.router.route(question)
 
-            print("[Planner] Search Required")
+        if tool == "search":
 
-            results = self.search_tool.execute(question)
+            search = self.registry.get("search")
+
+            results = search.execute(question)
 
             return self.chatbot.llm.ask_with_search(
                 question,
                 results
             )
-
-        print("[Planner] Search Not Required")
 
         return self.chatbot.ask(question)
