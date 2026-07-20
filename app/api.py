@@ -1,11 +1,11 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from pydantic import BaseModel
 
 from app.agent import Agent
 
 app = FastAPI(
     title="Smart Agent",
-    version="1.3"
+    version="1.4"
 )
 
 agent = Agent()
@@ -21,17 +21,27 @@ class ChatRequest(BaseModel):
     messages: list[Message]
 
 
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    print(f"\n===== {request.method} {request.url.path} =====")
+
+    response = await call_next(request)
+
+    print(f"===== {response.status_code} =====\n")
+
+    return response
+
+
 @app.get("/")
 def root():
     return {
         "service": "Smart Agent",
-        "version": "1.3"
+        "version": "1.4"
     }
 
 
 @app.get("/v1/models")
 def models():
-
     return {
         "object": "list",
         "data": [

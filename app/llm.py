@@ -1,4 +1,8 @@
-from ollama import chat
+import os
+import time
+
+
+from ollama import Client
 
 
 class LLM:
@@ -7,12 +11,27 @@ class LLM:
 
         self.model = model
 
+        ollama_host = os.getenv(
+            "OLLAMA_BASE_URL",
+            "http://localhost:11434"
+        )
+
+        print(f"[LLM] Ollama Host : {ollama_host}")
+
+        self.client = Client(host=ollama_host)
+
     def ask(self, messages):
 
-        response = chat(
+        start = time.time()
+
+        response = self.client.chat(
             model=self.model,
             messages=messages
         )
+
+        elapsed = time.time() - start
+
+        print(f"[LLM] Time : {elapsed:.2f} sec")
 
         return response["message"]["content"]
 
@@ -50,7 +69,9 @@ class LLM:
 {question}
 """
 
-        response = chat(
+        start = time.time()
+
+        response = self.client.chat(
             model=self.model,
             messages=[
                 {
@@ -59,5 +80,9 @@ class LLM:
                 }
             ]
         )
+
+        elapsed = time.time() - start
+
+        print(f"[LLM Search] Time : {elapsed:.2f} sec")
 
         return response["message"]["content"]

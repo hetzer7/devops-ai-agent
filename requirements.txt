@@ -10,4 +10,3 @@ pydantic
 httpx
 ollama
 ddgs
-fastapi

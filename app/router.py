@@ -1,6 +1,8 @@
 import json
+import os
+import time
 
-from ollama import chat
+from ollama import Client
 
 
 class Router:
@@ -9,6 +11,15 @@ class Router:
 
         self.registry = registry
         self.model = model
+
+        ollama_host = os.getenv(
+            "OLLAMA_BASE_URL",
+            "http://localhost:11434"
+        )
+
+        print(f"[Router] Ollama Host : {ollama_host}")
+
+        self.client = Client(host=ollama_host)
 
     def route(self, question):
 
@@ -40,8 +51,9 @@ class Router:
 
 {question}
 """
+        start = time.time()
 
-        response = chat(
+        response = self.client.chat(
             model=self.model,
             messages=[
                 {
@@ -50,6 +62,10 @@ class Router:
                 }
             ]
         )
+
+        elapsed = time.time() - start
+
+        print(f"[Router] Time : {elapsed:.2f} sec")
 
         answer = response["message"]["content"].strip()
 
