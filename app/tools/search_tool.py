@@ -18,7 +18,7 @@ class SearchTool(BaseTool):
             results = list(
                 ddgs.text(
                     question,
-                    max_results=5
+                    max_results=3
                 )
             )
 

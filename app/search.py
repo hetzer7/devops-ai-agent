@@ -10,7 +10,7 @@ class Search:
             results = list(
                 ddgs.text(
                     query,
-                    max_results=5
+                    max_results=3
                 )
             )
 

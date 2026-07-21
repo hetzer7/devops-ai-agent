@@ -46,7 +46,7 @@ class LLM:
 {item["title"]}
 
 내용:
-{item["body"]}
+{item["body"][:300]}
 
 링크:
 {item["href"]}
