@@ -1,7 +1,6 @@
 import os
 import time
 
-
 from ollama import Client
 
 
@@ -20,6 +19,9 @@ class LLM:
 
         self.client = Client(host=ollama_host)
 
+    ########################################################
+    # 일반 대화
+    ########################################################
     def ask(self, messages):
 
         start = time.time()
@@ -35,38 +37,41 @@ class LLM:
 
         return response["message"]["content"]
 
+    ########################################################
+    # 검색 결과를 이용한 답변
+    ########################################################
     def ask_with_search(self, question, search_results):
 
         context = ""
 
-        for item in search_results:
+        # 검색 결과 최대 3개만 사용
+        for item in search_results[:3]:
+
+            title = item.get("title", "")
+            body = item.get("body", "")[:300]
+            href = item.get("href", "")
 
             context += f"""
-제목:
-{item["title"]}
+제목: {title}
 
 내용:
-{item["body"][:300]}
+{body}
 
 링크:
-{item["href"]}
+{href}
 
--------------------------
-
+--------------------------
 """
 
         prompt = f"""
-당신은 친절한 AI Assistant입니다.
-
-아래 검색 결과를 참고하여 답변하세요.
-
-검색 결과
+검색 결과를 참고하여 질문에 답변하세요.
 
 {context}
 
-질문
-
+질문:
 {question}
+
+답변:
 """
 
         start = time.time()
